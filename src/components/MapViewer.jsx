@@ -6,6 +6,7 @@ const calculateNextPoint = (start, call) => {
   const { bearing, distance } = call;
 
   const bearingParts = bearing.match(/([NSEW\d.]+)/);
+  
   if (!bearingParts) return start;
 
   const direction = bearingParts[1].toUpperCase();
@@ -29,9 +30,10 @@ export default function MapViewer({ calls = [] }) {
 
   const center = useMemo(() => ({ lat: 37.0902, lng: -95.7129 }), []);
   const mapRef = useRef(null);
+  const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyBrdaAuBJa-ATke8nVoxSx5Q3dkmOzi9NM',
+    googleMapsApiKey: VITE_GOOGLE_MAPS_API_KEY,
   });
 
   const path = useMemo(() => {
