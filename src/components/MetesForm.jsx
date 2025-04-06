@@ -1,7 +1,4 @@
-import React, { useState } from 'react';
-
-export default function MetesForm({ onBulkAddPoints }) {
-  const [bulkInput, setBulkInput] = useState('');
+export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) {
 
   const handleBulkSubmit = (e) => {
     e.preventDefault();
@@ -9,10 +6,7 @@ export default function MetesForm({ onBulkAddPoints }) {
     const lines = bulkInput.trim().split('\n');
 
     const calls = lines.map(line => {
-      // Basic cleanup: remove slashes, commas, extra spaces
       const cleanLine = line.replace(/[\\/]/g, '').replace(/,/g, '').trim();
-
-      // Match direction and distance
       const match = cleanLine.match(/([NSEW\d.]+)\s*([\d.]+)/i);
 
       if (!match) return null;
@@ -23,12 +17,12 @@ export default function MetesForm({ onBulkAddPoints }) {
         bearing: bearing.toUpperCase(),
         distance: parseFloat(distance),
       };
-    }).filter(Boolean); // Remove nulls
+    }).filter(Boolean);
 
     onBulkAddPoints(calls);
 
-    // Clear form
-    setBulkInput('');
+    // Optional: clear input after submit
+    // setBulkInput('');
   };
 
   return (
