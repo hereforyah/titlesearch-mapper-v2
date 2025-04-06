@@ -5,24 +5,22 @@ import MetesForm from './components/MetesForm';
 function App() {
   const [calls, setCalls] = useState([]);
 
-  const handleAddPoint = (call) => {
-    setCalls([...calls, call]);
-    console.log('Added call:', call); // For now, log to check input
+  const handleBulkAddPoints = (newCalls) => {
+    setCalls(newCalls);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="text-center p-4 bg-blue-600 text-white text-xl font-bold">
-        TitleSearch.me Mapper v2
-      </header>
-      <main className="p-4 flex">
-        <div className="w-1/3">
-          <MetesForm onAddPoint={handleAddPoint} />
-        </div>
-        <div className="w-2/3">
-          <MapViewer calls={calls} />
-        </div>
-      </main>
+    <div className="flex min-h-screen w-screen bg-gray-50">
+      {/* Left Panel */}
+      <div className="w-80 bg-white p-4 shadow flex flex-col">
+        <h1 className="text-lg font-bold mb-4 text-blue-600">TitleSearch.me Mapper v2</h1>
+        <MetesForm onBulkAddPoints={handleBulkAddPoints} />
+      </div>
+
+      {/* Right Panel (Map Full Width) */}
+      <div className="flex-1">
+        <MapViewer calls={calls} />
+      </div>
     </div>
   );
 }
