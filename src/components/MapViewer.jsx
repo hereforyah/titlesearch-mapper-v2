@@ -2,10 +2,9 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { GoogleMap, useJsApiLoader, Polyline, Marker } from '@react-google-maps/api';
 import { point as turfPoint, destination as turfDestination } from '@turf/turf';
 
-// Convert bearing string (e.g., "N45E") to degrees
+// Convert bearing string to degrees
 const parseBearingToDegrees = (bearingStr) => {
   const clean = bearingStr.trim().toUpperCase();
-
   let angle = 0;
   const match = clean.match(/^([NS])(\d+(?:\.\d+)?)([EW])$/);
 
@@ -28,10 +27,10 @@ const parseBearingToDegrees = (bearingStr) => {
 };
 
 // Calculate next point using turf.js
-const calculateNextPoint = (start, call) => {
+const calculateNextPoint = (start, call, unit = 'feet') => {
   const from = turfPoint([start.lng, start.lat]);
   const bearing = parseBearingToDegrees(call.bearing);
-  const distanceInMiles = call.distance / 5280; // Convert feet to miles
+  const distanceInMiles = unit === 'feet' ? call.distance / 5280 : call.distance / 1609.34;
 
   const destination = turfDestination(from, distanceInMiles, bearing, { units: 'miles' });
   const [lng, lat] = destination.geometry.coordinates;
@@ -39,13 +38,13 @@ const calculateNextPoint = (start, call) => {
   return { lat, lng };
 };
 
-export default function MapViewer({ calls = [] }) {
+export default function MapViewer({ calls = [], unit = 'Feet' }) {
   const containerStyle = {
     width: '100%',
     height: '100%',
   };
 
-  const defaultCenter = { lat: 30.3958, lng: -86.8561 }; // General NW Florida
+  const defaultCenter = { lat: 30.3958, lng: -86.8561 };
   const [origin, setOrigin] = useState(defaultCenter);
   const mapRef = useRef(null);
 
@@ -55,19 +54,17 @@ export default function MapViewer({ calls = [] }) {
     googleMapsApiKey: VITE_GOOGLE_MAPS_API_KEY,
   });
 
-  // Build the path based on calls and origin
   const path = useMemo(() => {
     const points = [origin];
     calls.forEach(call => {
-      const nextPoint = calculateNextPoint(points[points.length - 1], call);
+      const nextPoint = calculateNextPoint(points[points.length - 1], call, unit.toLowerCase());
       points.push(nextPoint);
     });
     return points;
-  }, [calls, origin]);
+  }, [calls, origin, unit]);
 
   const onMapLoad = useCallback((map) => {
     mapRef.current = map;
-
     if (path.length > 1) {
       const bounds = new window.google.maps.LatLngBounds();
       path.forEach(point => bounds.extend(point));
@@ -81,10 +78,13 @@ export default function MapViewer({ calls = [] }) {
 
     setOrigin({ lat: clickedLat, lng: clickedLng });
 
-    // Optional: Zoom in when setting new origin
+    // ✅ Show coordinates in console
+    console.log('📍 Origin set to:', { lat: clickedLat, lng: clickedLng });
+
+    // Optional: pan and zoom in
     if (mapRef.current) {
       mapRef.current.panTo({ lat: clickedLat, lng: clickedLng });
-      mapRef.current.setZoom(15);
+      mapRef.current.setZoom(16); // Good zoom level for parcels
     }
   }, []);
 
@@ -92,14 +92,14 @@ export default function MapViewer({ calls = [] }) {
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={origin}
-      zoom={10}
+      zoom={12}
       onLoad={onMapLoad}
-      onClick={handleMapClick} // 🎉 Click-to-set origin!
+      onClick={handleMapClick}
     >
       {/* Origin Marker */}
       <Marker position={origin} label="Origin" />
 
-      {/* Path Line and Markers */}
+      {/* Parcel Path */}
       {path.length > 1 && (
         <>
           <Polyline
