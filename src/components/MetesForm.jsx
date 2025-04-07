@@ -6,22 +6,15 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
   const [selectedCounty, setSelectedCounty] = useState('');
   const [counties, setCounties] = useState([]);
 
-  // Principal Meridian
   const [principalMeridian, setPrincipalMeridian] = useState('');
-
-  // Starting Point Type
   const [startingPointType, setStartingPointType] = useState('POB');
-
-  // Units of measurement
   const [unit, setUnit] = useState('Feet');
+  const [notes, setNotes] = useState('');
 
   // Section, Township, Range
   const [section, setSection] = useState('');
   const [township, setTownship] = useState('');
   const [range, setRange] = useState('');
-
-  // Notes or Exceptions
-  const [notes, setNotes] = useState('');
 
   // Sample state and counties data
   const stateCountyData = {
@@ -54,7 +47,6 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
   const unitOptions = ['Feet', 'Chains', 'Rods', 'Meters'];
 
-  // Update counties when state changes
   useEffect(() => {
     if (selectedState && stateCountyData[selectedState]) {
       setCounties(stateCountyData[selectedState]);
@@ -86,7 +78,7 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
     onBulkAddPoints(calls);
 
-    // Optional: You can log or use other form values later
+    // Optional: Log the form state for future use
     console.log({
       selectedState,
       selectedCounty,
@@ -102,6 +94,7 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
   return (
     <form onSubmit={handleBulkSubmit} className="space-y-4 bg-white rounded shadow mb-4 p-4 text-sm">
+
       {/* State Selector */}
       <div>
         <label className="block font-medium mb-1">State:</label>
@@ -220,11 +213,11 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
       {/* Bulk Plot Input */}
       <div>
-        <label className="block font-medium mb-1">Paste Bulk Plot Data:</label>
+        <label className="block font-medium mb-1">Paste Plot Calls:</label>
         <textarea
           value={bulkInput}
           onChange={(e) => setBulkInput(e.target.value)}
-          placeholder="Paste your plot points here..."
+          placeholder="Paste your plot points here, e.g. N45E 300"
           className="border rounded w-full p-2"
           rows="6"
         />
