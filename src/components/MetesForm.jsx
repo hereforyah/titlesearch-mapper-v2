@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) {
-  // State for dropdowns
   const [selectedState, setSelectedState] = useState('');
   const [selectedCounty, setSelectedCounty] = useState('');
   const [counties, setCounties] = useState([]);
@@ -11,12 +10,10 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
   const [unit, setUnit] = useState('Feet');
   const [notes, setNotes] = useState('');
 
-  // Section, Township, Range
   const [section, setSection] = useState('');
   const [township, setTownship] = useState('');
   const [range, setRange] = useState('');
 
-  // Sample state and counties data
   const stateCountyData = {
     Florida: ['Escambia', 'Santa Rosa', 'Okaloosa', 'Walton'],
     Texas: ['Harris', 'Dallas', 'Travis', 'Bexar'],
@@ -78,7 +75,6 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
     onBulkAddPoints(calls);
 
-    // Optional: Log the form state for future use
     console.log({
       selectedState,
       selectedCounty,
@@ -97,7 +93,10 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
       {/* State Selector */}
       <div>
-        <label className="block font-medium mb-1">State:</label>
+        <label className="block font-medium mb-1">
+          State:
+          <span className="text-gray-500 text-xs ml-1">(Where the parcel is located)</span>
+        </label>
         <select
           value={selectedState}
           onChange={(e) => setSelectedState(e.target.value)}
@@ -112,7 +111,10 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
       {/* County Selector */}
       <div>
-        <label className="block font-medium mb-1">County:</label>
+        <label className="block font-medium mb-1">
+          County:
+          <span className="text-gray-500 text-xs ml-1">(Based on selected state)</span>
+        </label>
         <select
           value={selectedCounty}
           onChange={(e) => setSelectedCounty(e.target.value)}
@@ -128,7 +130,10 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
       {/* Principal Meridian */}
       <div>
-        <label className="block font-medium mb-1">Principal Meridian:</label>
+        <label className="block font-medium mb-1">
+          Principal Meridian:
+          <span className="text-gray-500 text-xs ml-1">(Survey reference line for your region)</span>
+        </label>
         <select
           value={principalMeridian}
           onChange={(e) => setPrincipalMeridian(e.target.value)}
@@ -143,7 +148,10 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
       {/* Starting Point Type */}
       <div>
-        <label className="block font-medium mb-1">Starting Point Type:</label>
+        <label className="block font-medium mb-1">
+          Starting Point Type:
+          <span className="text-gray-500 text-xs ml-1">(POB = Point of Beginning)</span>
+        </label>
         <select
           value={startingPointType}
           onChange={(e) => setStartingPointType(e.target.value)}
@@ -157,27 +165,39 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
       {/* Section, Township, Range */}
       <div className="grid grid-cols-3 gap-2">
         <div>
-          <label className="block font-medium mb-1">Section:</label>
+          <label className="block font-medium mb-1">
+            Section:
+            <span className="text-gray-500 text-xs ml-1">(Optional)</span>
+          </label>
           <input
             type="text"
+            placeholder="e.g., 12"
             value={section}
             onChange={(e) => setSection(e.target.value)}
             className="border rounded w-full p-2"
           />
         </div>
         <div>
-          <label className="block font-medium mb-1">Township:</label>
+          <label className="block font-medium mb-1">
+            Township:
+            <span className="text-gray-500 text-xs ml-1">(Optional)</span>
+          </label>
           <input
             type="text"
+            placeholder="e.g., 2N"
             value={township}
             onChange={(e) => setTownship(e.target.value)}
             className="border rounded w-full p-2"
           />
         </div>
         <div>
-          <label className="block font-medium mb-1">Range:</label>
+          <label className="block font-medium mb-1">
+            Range:
+            <span className="text-gray-500 text-xs ml-1">(Optional)</span>
+          </label>
           <input
             type="text"
+            placeholder="e.g., 30W"
             value={range}
             onChange={(e) => setRange(e.target.value)}
             className="border rounded w-full p-2"
@@ -187,7 +207,10 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
       {/* Units of Measurement */}
       <div>
-        <label className="block font-medium mb-1">Units of Measurement:</label>
+        <label className="block font-medium mb-1">
+          Units of Measurement:
+          <span className="text-gray-500 text-xs ml-1">(Used in your plot calls)</span>
+        </label>
         <select
           value={unit}
           onChange={(e) => setUnit(e.target.value)}
@@ -201,11 +224,14 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
       {/* Notes / Exceptions */}
       <div>
-        <label className="block font-medium mb-1">Notes / Exceptions:</label>
+        <label className="block font-medium mb-1">
+          Notes / Exceptions:
+          <span className="text-gray-500 text-xs ml-1">(Optional reference notes)</span>
+        </label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Enter any notes or exceptions here..."
+          placeholder="Any notes or exceptions about this parcel..."
           className="border rounded w-full p-2"
           rows="3"
         />
@@ -213,11 +239,14 @@ export default function MetesForm({ onBulkAddPoints, bulkInput, setBulkInput }) 
 
       {/* Bulk Plot Input */}
       <div>
-        <label className="block font-medium mb-1">Paste Plot Calls:</label>
+        <label className="block font-medium mb-1">
+          Paste Plot Calls:
+          <span className="text-gray-500 text-xs ml-1">(Use format: N45E 300)</span>
+        </label>
         <textarea
           value={bulkInput}
           onChange={(e) => setBulkInput(e.target.value)}
-          placeholder="Paste your plot points here, e.g. N45E 300"
+          placeholder="Example:\nN45E 300\nS15E 450\nS75W 300\nN15W 450"
           className="border rounded w-full p-2"
           rows="6"
         />
